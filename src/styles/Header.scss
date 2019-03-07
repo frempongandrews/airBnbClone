@@ -1,0 +1,9 @@
+@import "../variables";
+
+#header{
+  margin-bottom: 20px;
+
+  .navbar-dark{
+    background-color: $main-black-color !important;
+  }
+}
