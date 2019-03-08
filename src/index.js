@@ -2,10 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+
+ReactDOM.render(
+    <Router>
+        <Route render={() => <App />}/>
+    </Router>
+    , document.getElementById('root')
+);
 
 
 
