@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import "../../styles/RentalDetail.scss";
 
 
-class RentalList extends Component {
+class RentalDetail extends Component {
 
     render () {
 
         return (
 
             <div id="rental-detail">
-                <h1>Rental Detail</h1>
+                <h1>Rental Detail {this.props.match.params.id}</h1>
             </div>
 
         )
@@ -18,4 +18,4 @@ class RentalList extends Component {
 
 }
 
-export default RentalList;
+export default RentalDetail;

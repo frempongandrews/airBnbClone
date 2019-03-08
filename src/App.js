@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.scss';
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import Header from "./components/Header";
 import RentalList from "./components/rental/RentalList";
 import RentalDetail from "./components/rental/RentalDetail";
@@ -14,8 +14,9 @@ class App extends Component {
 
         <Header/>
 
-        <Route exact path="/" render={(props) => <RentalList {...props}/>}/>
-        <Route exact path="/rental" render={(props) => <RentalDetail {...props}/>}/>
+        <Route exact path="/" render={() => <Redirect to="/rentals"/>}/>
+        <Route exact path="/rentals" render={(props) => <RentalList {...props}/>}/>
+        <Route exact path="/rentals/:id" render={(props) => <RentalDetail {...props}/>}/>
 
 
       </div>

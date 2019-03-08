@@ -1,69 +1,17 @@
 import React, { Component } from "react";
 import "../../styles/RentalList.scss";
 import RentalCard from "./RentalCard";
+import { connect } from "react-redux";
+
 
 class RentalList extends Component {
 
-    state = {
-      rentals: [{
-          id: 1,
-          title: "Central Apartment",
-          city: "New York",
-          street: "Times Sqaure",
-          category: "apartment",
-          image: "http://via.placeholder.com/350x250",
-          bedrooms: 3,
-          description: "Very nice apartment",
-          dailyRate: 34,
-          shared: false,
-          createdAt: "24/12/2017"
-        },
-        {
-          id: 2,
-          title: "Central Apartment 2",
-          city: "San Francisco",
-          street: "Main street",
-          category: "condo",
-          image: "http://via.placeholder.com/350x250",
-          bedrooms: 2,
-          description: "Very nice apartment",
-          dailyRate: 12,
-          shared: true,
-          createdAt: "24/12/2017"
-        },
-        {
-          id: 3,
-          title: "Central Apartment 3",
-          city: "Bratislava",
-          street: "Hlavna",
-          category: "condo",
-          image: "http://via.placeholder.com/350x250",
-          bedrooms: 2,
-          description: "Very nice apartment",
-          dailyRate: 334,
-          shared: true,
-          createdAt: "24/12/2017"
-        },
-        {
-          id: 4,
-          title: "Central Apartment 4",
-          city: "Berlin",
-          street: "Haupt strasse",
-          category: "house",
-          image: "http://via.placeholder.com/350x250",
-          bedrooms: 9,
-          description: "Very nice apartment",
-          dailyRate: 33,
-          shared: true,
-          createdAt: "24/12/2017"
-        }]
-    };
-
     render () {
+        console.log(this.props);
 
-        const rentalItems = this.state.rentals.map(rental => {
+        const rentalItems = this.props.rentals.map(rental => {
            return (
-               <RentalCard rental={rental}/>
+               <RentalCard rental={rental} key={rental.id}/>
            )
         });
 
@@ -73,10 +21,7 @@ class RentalList extends Component {
                 <h1 className='page-title'>Your Home All Around the World</h1>
                 <div className='container'>
 
-
                         {rentalItems}
-
-
 
 
                 </div>
@@ -88,4 +33,10 @@ class RentalList extends Component {
 
 }
 
-export default RentalList;
+const mapStateToProps = (state) => {
+  return {
+      rentals:state.rentals.rentals
+  }
+};
+
+export default connect(mapStateToProps) (RentalList);
