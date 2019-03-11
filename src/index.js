@@ -6,11 +6,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import * as serviceWorker from './serviceWorker';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import allReducers from "./reducers/index";
+import { configureStore } from "./store/configureStore";
 
-
-const store = createStore(allReducers, {});
+const store = configureStore();
 
 ReactDOM.render(
     <Router>

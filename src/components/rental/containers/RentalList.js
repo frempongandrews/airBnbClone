@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import "../../styles/RentalList.scss";
-import RentalCard from "./RentalCard";
+import "../../../styles/RentalList.scss";
+import RentalCard from "../RentalCard";
 import { connect } from "react-redux";
 
 
@@ -22,7 +22,6 @@ class RentalList extends Component {
                 <div className='container'>
 
                         {rentalItems}
-
 
                 </div>
             </div>
