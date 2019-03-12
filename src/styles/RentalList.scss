@@ -4,13 +4,14 @@
 
   .page-title{
     margin-bottom: 20px;
+    text-align: center;
   }
 
   .container{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    border: 1px solid lightgray;
+    //border: 1px solid lightgray;
     padding: 20px !important;
     min-height: 70vh;
   }
