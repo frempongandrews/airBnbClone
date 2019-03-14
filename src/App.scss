@@ -4,10 +4,20 @@ $light-gray-color: #a9a9a9;
 $main-black-color: #20232a;
 $main-white-color: #ededed;
 
+
+
 .App {
 
   color: $main-color;
   //background-color: black;
+
+  #map{
+    //background-color: red;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+  }
 }
 
 body {
