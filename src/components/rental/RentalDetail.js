@@ -4,30 +4,71 @@ import React, { Component } from "react";
 import "../../styles/RentalDetail.scss";
 import { connect } from "react-redux";
 import { getRental } from "../../actions/rentalsActions";
+import axios from "axios";
+import { keys } from "../../utils/keys";
+
 
 class RentalDetail extends Component {
 
-     componentDidMount () {
+    componentDidMount () {
+
+        console.log("*******************Rental detail mounted");
         let rentalId = this.props.match.params.id;
         this.props.getRental(rentalId);
 
-        this.renderMap();
+        //this.renderMap();
+
     };
 
     initMap = () => {
+
+        let Rome = {lat: 41.890251, lng: 12.492373};
+
+        //save or load location in localStorage
+        //todo
+
         let map = new window.google.maps.Map(document.getElementById('map'), {
-            center: {lat: 41.890251, lng: 12.492373},
+            center: Rome,
             zoom: 8
         });
-        // The marker, positioned at Uluru
-        // var marker = new window.google.maps.Marker({position: uluru, map: map});
+
+        let marker = new window.google.maps.Marker({position: Rome, map: map});
+
+        let infowindow = new window.google.maps.InfoWindow({
+            content: "hello"
+        });
+
+         marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
 
     };
 
     renderMap = () => {
 
-        loadScript( "https://maps.googleapis.com/maps/api/js?key=AIzaSyDGQFOv8Dnc8uY7-RGMAf3P4AZk6rBbZes&callback=initMap");
+
+        //loadScript( `https://maps.googleapis.com/maps/api/js?key=${keys.googleMapsAPI_KEY}&callback=initMap`);
         window.initMap = this.initMap;
+
+
+
+
+        let { selectedRental }=  this.props;
+
+        let selectedRentalAddress = selectedRental.street;
+        let selectedRentalCity = selectedRental.city;
+
+        // `https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,
+        //             +Mountain+View,+CA&key=${keys.googleMapsAPI_KEY}`
+
+        // axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${selectedRentalAddress},
+        //             ${selectedRentalCity},&key=${keys.googleMapsAPI_KEY}`)
+        //     .then(res => {
+        //         console.log(res);
+        //     })
+
+
+
     };
 
     render () {

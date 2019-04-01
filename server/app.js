@@ -1,23 +1,27 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 9000;
 const config = require("./config/config.js");
 const dbUrl = config.dbUrl;
 const FakeDb = require("./fakeDb/FakeDb");
 
 
+
 //routes
 const rentalsRouter = require("./routes/rentalsRouter");
+const authRouter = require("./routes/authRouter");
 
 //mongo connection
-mongoose.connect(dbUrl, { useNewUrlParser: true })
-    .then(() => {
+mongoose.connect(dbUrl, { useNewUrlParser: true, useCreateIndex: true })
+    .then(async () => {
         console.log(`Successfully CONNECTED to mongo`);
 
         //populate Db with fake data for now
         let fakeDb = new FakeDb();
-        fakeDb.clearDb();
+        // fakeDb.clearDb().then(() => fakeDb.fillDb())
+        await fakeDb.clearDb();
         fakeDb.fillDb();
 
     })
@@ -25,9 +29,14 @@ mongoose.connect(dbUrl, { useNewUrlParser: true })
         console.log(`FAILED to CONNECT to mongo: ${err.message}`);
     });
 
+//body parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 
+//routes
 app.use("/rentals", rentalsRouter);
+app.use("/auth", authRouter);
 
 
 app.listen(PORT, () => {

@@ -34,6 +34,11 @@ const RentalSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 });
 

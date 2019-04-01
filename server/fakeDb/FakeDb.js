@@ -1,5 +1,5 @@
 const Rental = require("../models/Rental");
-
+const User = require("../models/User");
 function FakeDb () {
 
     this.rentals = [
@@ -12,7 +12,8 @@ function FakeDb () {
         bedrooms: 4,
         shared: true,
         description: "Very nice apartment in center of the city.",
-        dailyRate: 43
+        dailyRate: 43,
+
         },
         {
             title: "Modern apartment in center",
@@ -27,8 +28,8 @@ function FakeDb () {
         },
         {
             title: "Old house in nature",
-            city: "Spisska Nova Ves",
-            street: "Banicka 1",
+            city: "Milan",
+            street: "San Paolo 1",
             category: "house",
             image: "https://booksync-jerga-prod.s3.amazonaws.com/uploads/rental/image/5/image.jpeg",
             bedrooms: 5,
@@ -48,12 +49,8 @@ function FakeDb () {
            .then(savedRental => {
                savedRentals = savedRentals.concat(savedRental);
 
-
+               //console.log(savedRental);
                //log on last saved
-               if (i === 2) {
-                   //console.log(`Saved rentals`, savedRentals);
-                   console.log(`Db successfully FILLED`);
-               }
 
            })
            .catch(err => {
@@ -63,13 +60,9 @@ function FakeDb () {
     };
 
     this.clearDb = async function () {
-        await Rental.deleteMany({})
-        .then(() => {
-            console.log(`Db successfully CLEARED`)
-        })
-        .catch(err => {
-            console.log(`Error while clearing Db: ${err.message}`);
-        })
+        await Promise.all([Rental.deleteMany({}), User.deleteMany({})])
+        .then(() => console.log(`Db successfully CLEARED`))
+        .catch((err) => `Error while clearing Db: ${err.message}`)
     }
 
 }
