@@ -39,6 +39,17 @@ app.use("/rentals", rentalsRouter);
 app.use("/auth", authRouter);
 
 
+//error handler
+app.use((err, req, res, next) => {
+
+    res.status(400).json({
+        success: false,
+        error: err
+    });
+    next();
+});
+
+
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });

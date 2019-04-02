@@ -2,16 +2,44 @@ const User = require("../models/User");
 const mailSettings = require("../config/config").dreamhostEmailSettings;
 const randomstring = require("randomstring");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 const transporter = nodemailer.createTransport(mailSettings);
+const config = require("../config/config");
 
 const authController = {
 
-    registerUser: (req, res) => {
+    registerUser: (req, res, next) => {
 
 
         console.log(req.body);
 
         let { email, password } = req.body;
+
+        email = email.trim();
+        password = password.trim();
+
+        console.log(email);
+
+        if (!email) {
+            return res.json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        if (!password) {
+            return res.json({
+                success: false,
+                message: "Password is required"
+            })
+        }
+
+        if (password.length < 4) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 4 characters"
+            })
+        }
 
         let newUser = new User({
             email,
@@ -23,8 +51,9 @@ const authController = {
         .then(user => {
             if (user !== null) {
                 return res.json({
-                    error: "Email already registered",
-                    type: "email"
+                    success: false,
+                    message: "Email already registered",
+
                 })
             }
 
@@ -44,14 +73,15 @@ const authController = {
                 text: `Thanks for registering. Press on following link to verify your email. 
                     http://localhost:9000/auth/verify`,
                 html: `<p>Thanks for registering. Press on following link to verify your email. 
-                    <a href="http://localhost:9000/verify">Verify your email here</a></p>`
+                    <a href="http://localhost:3000/verify">Verify your email here</a></p>`
             }, (err, info) => {
                 if (err) {
                     console.log(err);
-                    return res.status(422).json({
-                        error: "Error occurred. Please check if email is valid",
-                        type: "email"
+                    return res.status(400).json({
+                        success: false,
+                        message: "Error occurred. Please check if email is valid",
                     });
+
                 }
 
                 //if success sending email, save user
@@ -60,19 +90,143 @@ const authController = {
                 newUser.save()
                 .then(newUser => {
                     console.log(`newly registered user ${newUser}`);
+                    res.json({
+                        success: true,
+                        message: `${email} has successfully registered`,
+                        user: {
+                           email
+                        }
+                    })
                 })
-                .catch(err => console.warn(err));
+                .catch(err => {
+                    console.warn(err);
+                    next(err);
+                });
 
             });
 
         })
         .catch(err => {
-            console.warn(err);
+            //console.warn(err);
+            next(err);
         });
     },
 
-    loginUser: (req, res) =>{
+    verifyUser: (req, res, next) => {
+
+        console.log(req.body);
+        //email address
+        //verificationCode
+
+        const { email, verificationCode } = req.body;
+
+        if (!email) {
+           return res.status(400).json({
+               success: false,
+               message: "Email is required"
+           })
+        }
+
+        if (!verificationCode) {
+            return res.status(400).json({
+                success: false,
+                message: "Verification code is required"
+            })
+        }
+
+        User.findOne({email})
+            .then( async (foundUser) => {
+
+                if (foundUser === null) {
+                    return res.json({
+                        success: false,
+                        message: "No user found"
+                    })
+                }
+
+
+                //check verificationCode
+                if (foundUser.verificationCode === verificationCode.trim()) {
+
+                    foundUser.verificationCode = "";
+                    foundUser.isVerified = true;
+
+                    await foundUser.save();
+
+                    res.json({
+                        success: true,
+                        message: `${email} has successfully been verified. You can now login`
+                    })
+                } else {
+                    res.json({
+                        success: false,
+                        message: `Wrong email or verification code`
+                    })
+                }
+
+            })
+            .catch(err => {
+                //console.warn(err);
+                next(err);
+            })
+
+    },
+
+    loginUser: (req, res, next) =>{
         res.send("login");
+        //once login send token to client
+
+        const { email, password } = req.body;
+
+        if (!email) {
+            return res.json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        if (!password) {
+            return res.json({
+                success: false,
+                message: "Password is required"
+            })
+        }
+
+        User.findOne({email})
+        .then(foundUser => {
+            if (foundUser === null) {
+                return res.json({
+                   success: false,
+                   message: "No user found"
+                });
+            }
+
+            //compare password
+            if (foundUser.hasSamePassword(password)) {
+
+
+                //check if user is verified
+                //todo
+
+
+                let userPayload = foundUser.showDetails();
+
+
+                let token = jwt.sign(userPayload, config.secret, {expiresIn: "20h"});
+
+                return res.json({
+                    success: true,
+                    message: "You have successfully logged in",
+                    user: email,
+                    token
+                });
+            }
+        })
+        .catch(err => {
+            next(err);
+        })
+
+
     }
 };
 
