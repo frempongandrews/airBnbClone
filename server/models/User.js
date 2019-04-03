@@ -33,10 +33,7 @@ const UserSchema = new Schema({
 });
 
 //check password
-UserSchema.methods.hasSamePassword = function (plainPassword) {
-    const user = this;
-    return bcrypt.compareSync(plainPassword, user.password);
-};
+
 
 UserSchema.methods.showDetails = function () {
   return {
@@ -46,20 +43,5 @@ UserSchema.methods.showDetails = function () {
   }
 };
 
-UserSchema.pre("save", function (next) {
-   let user = this;
-
-   //encrypt password
-    bcrypt.genSalt(10, (err, salt) => {
-        if (!err) {
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                user.password = hash;
-
-                next();
-            })
-        }
-    })
-
-});
 
 module.exports = mongoose.model("User", UserSchema);

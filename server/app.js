@@ -20,9 +20,9 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useCreateIndex: true })
 
         //populate Db with fake data for now
         let fakeDb = new FakeDb();
-        // fakeDb.clearDb().then(() => fakeDb.fillDb())
-        await fakeDb.clearDb();
-        fakeDb.fillDb();
+
+        // await fakeDb.clearDb();
+        // fakeDb.fillDb();
 
     })
     .catch(err => {

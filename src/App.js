@@ -6,7 +6,8 @@ import Header from "./components/Header";
 import RentalList from "./components/rental/containers/RentalList";
 import RentalDetail from "./components/rental/RentalDetail";
 import NotFound from "./components/NotFound";
-
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 
 class App extends Component {
   render() {
@@ -15,11 +16,14 @@ class App extends Component {
 
         <Header/>
 
-
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/rentals"/>}/>
             <Route exact path="/rentals" render={(props) => <RentalList {...props}/>}/>
             <Route exact path="/rentals/:id" render={(props) => <RentalDetail {...props}/>}/>
+
+            <Route exact path="/login" render={(props) => <Login {...props}/>}/>
+            <Route exact path="/signup" render={(props) => <Signup {...props}/>}/>
+
             <NotFound/>
           </Switch>
 

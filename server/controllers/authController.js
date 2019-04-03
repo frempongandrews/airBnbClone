@@ -2,6 +2,7 @@ const User = require("../models/User");
 const mailSettings = require("../config/config").dreamhostEmailSettings;
 const randomstring = require("randomstring");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const transporter = nodemailer.createTransport(mailSettings);
 const config = require("../config/config");
@@ -74,7 +75,7 @@ const authController = {
                     http://localhost:9000/auth/verify`,
                 html: `<p>Thanks for registering. Press on following link to verify your email. 
                     <a href="http://localhost:3000/verify">Verify your email here</a></p>`
-            }, (err, info) => {
+            }, async (err, info) => {
                 if (err) {
                     console.log(err);
                     return res.status(400).json({
@@ -86,22 +87,18 @@ const authController = {
 
                 //if success sending email, save user
                 console.log(info);
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(password, salt);
+                newUser.password = hash;
+                await newUser.save();
 
-                newUser.save()
-                .then(newUser => {
-                    console.log(`newly registered user ${newUser}`);
-                    res.json({
-                        success: true,
-                        message: `${email} has successfully registered`,
-                        user: {
-                           email
-                        }
-                    })
+                res.json({
+                    success: true,
+                    message: `${email} has successfully registered`,
+                    user: {
+                        email
+                    }
                 })
-                .catch(err => {
-                    console.warn(err);
-                    next(err);
-                });
 
             });
 
@@ -173,10 +170,12 @@ const authController = {
     },
 
     loginUser: (req, res, next) =>{
-        res.send("login");
+
         //once login send token to client
 
         const { email, password } = req.body;
+
+        console.log(req.body);
 
         if (!email) {
             return res.json({
@@ -201,25 +200,34 @@ const authController = {
                 });
             }
 
-            //compare password
-            if (foundUser.hasSamePassword(password)) {
+            //console.log(foundUser.hasSamePassword(password));
 
+            let samePassword = bcrypt.compareSync(password, foundUser.password);
+            console.log(samePassword);
 
-                //check if user is verified
-                //todo
-
-
-                let userPayload = foundUser.showDetails();
-
-
-                let token = jwt.sign(userPayload, config.secret, {expiresIn: "20h"});
-
+            if (!samePassword) {
                 return res.json({
-                    success: true,
-                    message: "You have successfully logged in",
-                    user: email,
-                    token
-                });
+                    success: false,
+                    message: "Wrong email or password"
+                })
+            }
+
+            //if passwords match
+            if (samePassword) {
+                if (foundUser.isVerified && foundUser.verificationCode === "") {
+
+                    let userPayload = foundUser.showDetails();
+
+                    let token = jwt.sign(userPayload, config.secret, {expiresIn: "20h"});
+
+                    return res.json({
+                        success: true,
+                        message: "You have successfully logged in",
+                        user: email,
+                        token
+                    });
+
+                }
             }
         })
         .catch(err => {
