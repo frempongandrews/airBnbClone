@@ -17,7 +17,7 @@ class Signup extends Component {
     signup = (e) => {
         e.preventDefault();
         let userData = this.state.data;
-        this.props.signupUser(userData, this.props.history);
+        this.props.signupUser(userData);
     };
 
     onChange = (e) => {
@@ -113,4 +113,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signup));
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

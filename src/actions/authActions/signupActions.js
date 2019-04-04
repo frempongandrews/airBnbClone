@@ -9,7 +9,7 @@ const startUserSignup = () => {
     }
 };
 
-export const signupUser = (userData, history) => {
+export const signupUser = (userData) => {
      return (dispatch) => {
 
          //start signup process
@@ -51,7 +51,5 @@ export const signupUser = (userData, history) => {
          }, 3000);
 
     }
-
-
 
 };
