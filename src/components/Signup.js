@@ -1,10 +1,36 @@
 import React, { Component } from 'react';
 import '../styles/Signup.scss';
-
+import { signupUser } from "../actions/authActions/signupActions";
+import { connect } from "react-redux";
 
 class Signup extends Component {
 
+    state={
+      data: {
+          email: "",
+          password: ""
+      },
+    };
+
+    signup = (e) => {
+        e.preventDefault();
+        let userData = this.state.data;
+        this.props.signupUser(userData);
+    };
+
+    onChange = (e) => {
+        this.setState({
+            ...this.state,
+            data: {
+                ...this.state.data,
+                [e.target.name]: e.target.value
+            }
+        })
+    };
+
     render() {
+
+
         return (
             <div>
                 <section className="login-block">
@@ -12,25 +38,32 @@ class Signup extends Component {
                         <div className="row">
                             <div className="col-md-6 login-sec">
                                 <h2 className="text-left">Sign up</h2>
-                                <form className="login-form">
+                                <form className="login-form" onSubmit={this.signup} method="post">
                                     <div className="form-group">
-                                        <label htmlFor="exampleInputEmail1" className="text-uppercase small">Username</label>
-                                        <input type="text" className="form-control" placeholder="" />
-
+                                        <label className="text-uppercase small">Email</label>
+                                        <input type="email" className="form-control" name="email" onChange={this.onChange}/>
+                                        {/*error*/}
+                                        {
+                                            this.props.signup.errors.email.length > 0 &&
+                                            <p className="small mt-1 text-danger">{this.props.signup.errors.email}</p>
+                                        }
+                                        {/* /error*/}
                                     </div>
+
                                     <div className="form-group">
-                                        <label htmlFor="exampleInputPassword1"
-                                               className="text-uppercase small">Password</label>
-                                        <input type="password" className="form-control" placeholder="" />
+                                        <label className="text-uppercase small">Password</label>
+                                        <input type="password" className="form-control" name="password" onChange={this.onChange}/>
+                                        {/*error*/}
+                                        {
+                                            this.props.signup.errors.password.length > 0 &&
+                                            <p className="small mt-1 text-danger">{this.props.signup.errors.password}</p>
+                                        }
+                                        {/* /error*/}
                                     </div>
-
 
                                     <div className="form-check">
-
                                         <button type="submit" className="btn btn-login border text-uppercase">Submit</button>
-
                                     </div>
-
 
                                 </form>
 
@@ -50,4 +83,21 @@ class Signup extends Component {
     }
 }
 
-export default Signup;
+
+
+const mapStateToProps = (state) => {
+    return {
+        signup: state.signup
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signupUser: (userData) => {
+            dispatch(signupUser(userData));
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

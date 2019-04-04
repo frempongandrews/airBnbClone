@@ -11,34 +11,72 @@ const authController = {
 
     registerUser: (req, res, next) => {
 
+        //email
+        //password
 
-        console.log(req.body);
+        //console.log(req.body);
+
 
         let { email, password } = req.body;
+        //console.log(email.trim().includes("@"));
 
         email = email.trim();
         password = password.trim();
 
-        console.log(email);
+        let errors = {
+
+        };
 
         if (!email) {
-            return res.json({
-                success: false,
-                message: "Email is required"
-            })
+
+            //check if there is already an email error
+            if (!errors.email) {
+                errors["email"] = "Email is required"
+            }
+        }
+
+        if ((email.trim().includes("@"))) {
+
+            let atIndex = email.indexOf("@");
+
+            //check letters before @ symbol
+            if (atIndex === 0 || email.trim().slice(0, atIndex).length < 1 ) {
+                //check if there is already an email error
+                if (!errors.email) {
+                    errors["email"] = "Email is required"
+                }
+            }
+
+            //check letters after @ symbol
+            if (email.trim().slice(atIndex).length < 1) {
+                //check if there is already an email error
+                if (!errors.email) {
+                    errors["email"] = "Email is required"
+                }
+            }
+
         }
 
         if (!password) {
-            return res.json({
-                success: false,
-                message: "Password is required"
-            })
+            //check if there is already a password error
+            if (!errors.password) {
+                errors["password"] = "Password is required";
+            }
         }
 
         if (password.length < 4) {
+
+            //check if there is already a password error
+            if (!errors.password) {
+                errors["password"] = "Password must be at least 4 characters";
+            }
+        }
+
+        //check if any errors
+        if (Object.keys(errors).length > 0) {
             return res.status(400).json({
                 success: false,
-                message: "Password must be at least 4 characters"
+                errors
             })
         }
 

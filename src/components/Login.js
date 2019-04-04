@@ -1,5 +1,8 @@
+/*eslint-disable*/
+
 import React, { Component } from 'react';
 import '../styles/Signup.scss';
+import { loginImage } from "../images/login-image.jpg.jpg";
 
 
 class Login extends Component {
@@ -36,7 +39,6 @@ class Login extends Component {
 
                             </div>
                             <div className="col-md-6 banner-sec">
-
 
 
                             </div>

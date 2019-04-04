@@ -1,4 +1,6 @@
-import React, { Component } from "react";
+/*eslint-disable*/
+
+import React from "react";
 import "../styles/NotFound.scss";
 import { Link } from "react-router-dom";
 
