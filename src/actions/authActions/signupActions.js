@@ -9,7 +9,7 @@ const startUserSignup = () => {
     }
 };
 
-export const signupUser = (userData) => {
+export const signupUser = (userData, history) => {
      return (dispatch) => {
 
          //start signup process
@@ -18,30 +18,34 @@ export const signupUser = (userData) => {
          //send request to server after x seconds
          setTimeout( () => {
 
-              axios.post("/auth/register", userData)
+               axios.post("/auth/register", userData)
                    .then(res => {
                      console.log(res.data);
                      //dispatch action here
-                     dispatch({
+                       dispatch({
                          type: SIGNUP_USER_SUCCESS,
                          payload: {
                              user: res.data.user.email,
                              message: res.data.message
                          }
-                     })
-
-
+                     });
 
                    })
                  .catch(err => {
                      console.log(err.response);
-                     dispatch({
-                         type: SIGNUP_USER_ERROR,
-                         errors: {
-                             email: err.response.data.errors.email || "",
-                             password: err.response.data.errors.password || "",
+                     if (err.response) {
+
+                         if (err.response.status === 400) {
+                             dispatch({
+                                 type: SIGNUP_USER_ERROR,
+                                 errors: {
+                                     email: err.response.data.errors.email || "",
+                                     password: err.response.data.errors.password || "",
+                                 }
+                             })
                          }
-                     })
+
+                     }
                  })
 
          }, 3000);

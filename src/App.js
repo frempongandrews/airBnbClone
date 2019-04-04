@@ -6,8 +6,8 @@ import Header from "./components/Header";
 import RentalList from "./components/rental/containers/RentalList";
 import RentalDetail from "./components/rental/RentalDetail";
 import NotFound from "./components/NotFound";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
+import Signup from "./components/auth/Signup";
+import Login from "./components/auth/Login";
 
 class App extends Component {
   render() {

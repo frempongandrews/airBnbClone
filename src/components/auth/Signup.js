@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import '../styles/Signup.scss';
-import { signupUser } from "../actions/authActions/signupActions";
+import '../../styles/Signup.scss';
+import { signupUser } from "../../actions/authActions/signupActions";
+import Spinner from "../../components/Spinner";
 import { connect } from "react-redux";
+import { withRouter, Redirect } from "react-router-dom";
 
 class Signup extends Component {
 
@@ -15,7 +17,7 @@ class Signup extends Component {
     signup = (e) => {
         e.preventDefault();
         let userData = this.state.data;
-        this.props.signupUser(userData);
+        this.props.signupUser(userData, this.props.history);
     };
 
     onChange = (e) => {
@@ -30,6 +32,12 @@ class Signup extends Component {
 
     render() {
 
+        const { registeredUser, successMessage } = this.props.signup;
+
+        //redirect on successful register
+        if (registeredUser.length > 0 && successMessage.length > 0) {
+            return <Redirect to="/login"/>
+        }
 
         return (
             <div>
@@ -62,7 +70,12 @@ class Signup extends Component {
                                     </div>
 
                                     <div className="form-check">
-                                        <button type="submit" className="btn btn-login border text-uppercase">Submit</button>
+                                        <button type="submit" className="btn btn-login border text-uppercase" >Submit
+                                            {
+                                                this.props.signup.isRegistering &&
+                                                <span className="spin"><Spinner/></span>
+                                            }
+                                        </button>
                                     </div>
 
                                 </form>
@@ -94,10 +107,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         signupUser: (userData) => {
-            dispatch(signupUser(userData));
+            return dispatch(signupUser(userData));
         }
     }
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signup));

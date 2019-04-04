@@ -1,8 +1,8 @@
 /*eslint-disable*/
 
 import React, { Component } from 'react';
-import '../styles/Signup.scss';
-import { loginImage } from "../images/login-image.jpg.jpg";
+import '../../styles/Signup.scss';
+import { loginImage } from "../../images/login-image.jpg.jpg";
 
 
 class Login extends Component {

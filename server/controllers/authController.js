@@ -89,9 +89,11 @@ const authController = {
         User.findOne({email})
         .then(user => {
             if (user !== null) {
-                return res.json({
+                return res.status(400).json({
                     success: false,
-                    message: "Email already registered",
+                    errors: {
+                        email: "Email already registered"
+                    },
 
                 })
             }
@@ -118,7 +120,9 @@ const authController = {
                     console.log(err);
                     return res.status(400).json({
                         success: false,
-                        message: "Error occurred. Please check if email is valid",
+                        errors: {
+                            email: "Error occurred. Please check if email is valid"
+                        },
                     });
 
                 }
@@ -158,14 +162,18 @@ const authController = {
         if (!email) {
            return res.status(400).json({
                success: false,
-               message: "Email is required"
+               errors: {
+                   email: "Email is required"
+               }
            })
         }
 
         if (!verificationCode) {
             return res.status(400).json({
                 success: false,
-                message: "Verification code is required"
+                errors: {
+                    verificationCode: "Verification code is required"
+                }
             })
         }
 
@@ -173,9 +181,11 @@ const authController = {
             .then( async (foundUser) => {
 
                 if (foundUser === null) {
-                    return res.json({
+                    return res.status(400).json({
                         success: false,
-                        message: "No user found"
+                        errors: {
+                            email: "No user found"
+                        }
                     })
                 }
 
@@ -193,9 +203,9 @@ const authController = {
                         message: `${email} has successfully been verified. You can now login`
                     })
                 } else {
-                    res.json({
+                    res.status(400).json({
                         success: false,
-                        message: `Wrong email or verification code`
+                        email: `Wrong email or verification code`
                     })
                 }
 
@@ -216,25 +226,31 @@ const authController = {
         console.log(req.body);
 
         if (!email) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
-                message: "Email is required"
+                errors: {
+                    email: "Email is required"
+                }
             })
         }
 
         if (!password) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
-                message: "Password is required"
+                errors: {
+                    password: "Password is required"
+                }
             })
         }
 
         User.findOne({email})
         .then(foundUser => {
             if (foundUser === null) {
-                return res.json({
+                return res.status(400).json({
                    success: false,
-                   message: "No user found"
+                   errors: {
+                       email: "No user found"
+                   }
                 });
             }
 
@@ -244,9 +260,11 @@ const authController = {
             console.log(samePassword);
 
             if (!samePassword) {
-                return res.json({
+                return res.status(400).json({
                     success: false,
-                    message: "Wrong email or password"
+                    errors: {
+                        email: "Wrong email or password"
+                    }
                 })
             }
 
