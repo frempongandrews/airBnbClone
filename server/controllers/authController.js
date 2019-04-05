@@ -17,11 +17,12 @@ const authController = {
         //console.log(req.body);
 
 
-        let { email, password } = req.body;
+        let { email, password, confirmPassword } = req.body;
         //console.log(email.trim().includes("@"));
 
         email = email.trim();
         password = password.trim();
+        confirmPassword = confirmPassword.trim();
 
         let errors = {
 
@@ -35,12 +36,15 @@ const authController = {
             }
         }
 
-        if ((email.trim().includes("@"))) {
+        if ((email.includes("@"))) {
+
 
             let atIndex = email.indexOf("@");
 
+            console.log(email.slice(atIndex));
+
             //check letters before @ symbol
-            if (atIndex === 0 || email.trim().slice(0, atIndex).length < 1 ) {
+            if (atIndex === 0 || email.slice(0, atIndex).length < 1 ) {
                 //check if there is already an email error
                 if (!errors.email) {
                     errors["email"] = "Email is required"
@@ -48,7 +52,8 @@ const authController = {
             }
 
             //check letters after @ symbol
-            if (email.trim().slice(atIndex).length < 1) {
+            if (email.slice(atIndex + 1).length < 1) {
+
                 //check if there is already an email error
                 if (!errors.email) {
                     errors["email"] = "Email is required"
@@ -69,6 +74,23 @@ const authController = {
             //check if there is already a password error
             if (!errors.password) {
                 errors["password"] = "Password must be at least 4 characters";
+            }
+        }
+
+        if (!confirmPassword) {
+
+            //check if there is already a password error
+            if (!errors.confirmPassword) {
+                errors["confirmPassword"] = "Please confirm password";
+            }
+        }
+
+        if (password !== confirmPassword) {
+
+            //check if there is already a password error
+            if (!errors.password && !errors.confirmPassword) {
+                errors["password"] = "Passwords do not match";
+                errors["confirmPassword"] = "Passwords do not match";;
             }
         }
 

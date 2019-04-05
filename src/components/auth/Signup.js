@@ -10,7 +10,8 @@ class Signup extends Component {
     state={
       data: {
           email: "",
-          password: ""
+          password: "",
+          confirmPassword: ""
       },
     };
 
@@ -49,7 +50,7 @@ class Signup extends Component {
                                 <form className="login-form" onSubmit={this.signup} method="post">
                                     <div className="form-group">
                                         <label className="text-uppercase small">Email</label>
-                                        <input type="email" className="form-control" name="email" onChange={this.onChange}/>
+                                        <input type="text" className="form-control" name="email" onChange={this.onChange}/>
                                         {/*error*/}
                                         {
                                             this.props.signup.errors.email.length > 0 &&
@@ -65,6 +66,17 @@ class Signup extends Component {
                                         {
                                             this.props.signup.errors.password.length > 0 &&
                                             <p className="small mt-1 text-danger">{this.props.signup.errors.password}</p>
+                                        }
+                                        {/* /error*/}
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="text-uppercase small">Confirm Password</label>
+                                        <input type="password" className="form-control" name="confirmPassword" onChange={this.onChange}/>
+                                        {/*error*/}
+                                        {
+                                            this.props.signup.errors.confirmPassword.length > 0 &&
+                                            <p className="small mt-1 text-danger">{this.props.signup.errors.confirmPassword}</p>
                                         }
                                         {/* /error*/}
                                     </div>

@@ -41,6 +41,7 @@ export const signupUser = (userData) => {
                                  errors: {
                                      email: err.response.data.errors.email || "",
                                      password: err.response.data.errors.password || "",
+                                     confirmPassword: err.response.data.errors.confirmPassword || ""
                                  }
                              })
                          }

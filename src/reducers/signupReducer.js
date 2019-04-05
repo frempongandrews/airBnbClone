@@ -6,7 +6,8 @@ let initialState = {
   isRegistering: false,
   errors: {
       email: "",
-      password: ""
+      password: "",
+      confirmPassword: ""
   }
 };
 
@@ -41,7 +42,8 @@ const signupReducer = (state=initialState, action) => {
                 isRegistering: false,
                 errors: {
                     email: action.errors.email || "",
-                    password: action.errors.password || ""
+                    password: action.errors.password || "",
+                    confirmPassword: action.errors.confirmPassword || ""
                 }
             };
             return newState;
